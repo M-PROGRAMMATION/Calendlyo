@@ -1,0 +1,1 @@
+package com.calendlyo.api.domain.entity;
