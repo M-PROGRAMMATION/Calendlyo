@@ -1,0 +1,35 @@
+services:
+  calendlyo_postgres:
+    image: postgres
+    container_name: calendlyo_postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: calendlyo
+      POSTGRES_PASSWORD: calendlyoPWD
+      POSTGRES_DB: calendlyo
+    ports:
+      - 35434:5432
+    networks:
+      - calendlyo_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U calendlyo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  calendlyo_adminer:
+    image: adminer
+    container_name: calendlyo_adminer
+    restart: always
+    ports:
+      - 38082:8080
+    networks:
+      - calendlyo_network
+    depends_on:
+      calendlyo_postgres:
+        condition: service_healthy
+
+networks:
+  calendlyo_network:
+    driver: bridge
